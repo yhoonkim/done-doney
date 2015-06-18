@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150605022739) do
+ActiveRecord::Schema.define(version: 20150618021547) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider"
@@ -20,6 +20,45 @@ ActiveRecord::Schema.define(version: 20150605022739) do
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.string   "access_token"
+  end
+
+  create_table "lists", force: :cascade do |t|
+    t.datetime "original_created_at"
+    t.string   "title"
+    t.string   "list_type"
+    t.string   "type"
+    t.integer  "revision"
+    t.string   "name"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+  end
+
+  create_table "sub_tasks", force: :cascade do |t|
+    t.datetime "original_created_at"
+    t.integer  "created_by_id"
+    t.integer  "task_id"
+    t.integer  "revision"
+    t.string   "title"
+    t.integer  "completed_by_id"
+    t.datetime "completed_at"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+  end
+
+  create_table "tasks", force: :cascade do |t|
+    t.integer  "assignee_id"
+    t.integer  "assigner_id"
+    t.datetime "original_created_at"
+    t.integer  "created_by_id"
+    t.date     "due_date"
+    t.integer  "list_id"
+    t.integer  "revision"
+    t.boolean  "starred"
+    t.string   "title"
+    t.integer  "completed_by_id"
+    t.datetime "completed_at"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
   end
 
   create_table "users", force: :cascade do |t|

@@ -1,5 +1,10 @@
 class SessionsController < ApplicationController
+
   def new
+    # raise user_signed_in?.inspect
+    if user_signed_in?
+      redirect_to report_path
+    end
   end
 
   def create
@@ -25,12 +30,11 @@ class SessionsController < ApplicationController
       auth.update(access_token: access_token)
       auth.save
 
-      wunderlist = WunderlistApi.new(access_token)
-      lists = wunderlist.get("lists", nil)
-      raise lists.body.inspect
       # Create the session
       session[:user_id] = auth.user.id
-      render :text => "Welcome #{auth.user.name}!"
+
+      redirect_to report_path
+      # render :text => "Welcome #{auth.user.name}!"
     end
   end
 
