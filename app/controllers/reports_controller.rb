@@ -8,12 +8,11 @@ class ReportsController < ApplicationController
 
     #Todo
     #1) Sync
-    #2) Show tasks and lists
     #3) Handle API xxceptions
 
     wunderlist = WunderlistApi.new(access_token)
-    @lists = wunderlist.get("lists", nil).body
-    raise @lists.inspect
+    @raw_lists = JSON.parse(wunderlist.get("lists", nil).body, {symbolize_names: true})
+
   end
 
 private
@@ -21,5 +20,17 @@ private
     if !user_signed_in?
       redirect_to login_path
     end
+  end
+
+  def sync_wunderlist(access_token)
+    #0 Compare the root revision
+    #1 Get all of lists, tasks, and subtasks
+
+    #2 Add new lists
+    #3 Delete removed lists
+    #4 Compare the list revision and update them which are bigger than saved one
+
+    #5 Sync Tasks, SubTasks under the changed lists
+
   end
 end
