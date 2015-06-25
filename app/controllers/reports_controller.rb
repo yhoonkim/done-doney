@@ -3,17 +3,10 @@ class ReportsController < ApplicationController
 
   def index
     @user = User.find(session[:user_id])
-
-    @raw_lists = @user.lists
-    @user.sync_wunderlist!
-    @lists = @user.lists
-    #Todo
-    #1) Sync
-    #3) Handle API xxceptions
-
-
-    # @lists = User.find(session[:user_id]).lists
-
+    # @user.sync_wunderlist!
+    @tasks = @user.lists.first.tasks
+    @tasks_todo = @tasks.select { |t| !t.completed_at }
+    @tasks_done = @tasks.select { |t| t.completed_at }
   end
 
 private
