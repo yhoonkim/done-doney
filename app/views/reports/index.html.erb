@@ -1,33 +1,39 @@
-<table>
-  <tr>
-    <th>Title</th>
-    <th>Revision</th>
-    <th>Created at</th>
+<div class="row">
+  <div class="col l12 s12">
+    <table>
+      <tr>
+        <th>Title</th>
+        <th>Revision</th>
+        <th>Created at</th>
 
-  </tr>
-  <% @raw_lists.each do |list| %>
-  <tr>
-    <td><%= list[:title] %></td>
-    <td><%= list[:revision] %></td>
-    <td><%= list[:created_at] %></td>
+      </tr>
+      <% @raw_lists.each do |list| %>
+      <tr>
+        <td><%= list[:title] %></td>
+        <td><%= list[:revision] %></td>
+        <td><%= list[:created_at] %></td>
 
-  </tr>
-  <%end%>
-</table>
+      </tr>
+      <%end%>
+    </table>
 
-<table>
-  <tr>
-    <th>Title</th>
-    <th>Revision</th>
-    <th>Created at</th>
+    <table>
+      <tr>
+        <th>Title</th>
+        <th>Revision</th>
+        <th>Created at</th>
 
-  </tr>
-  <% @lists.each do |list| %>
-  <tr>
-    <td><%= list.title %></td>
-    <td><%= list.revision %></td>
-    <td><%= list.created_at %></td>
+      </tr>
+      <% @lists.each do |list| %>
+      <tr>
+        <td><%= list.title %></td>
+        <td><%= list.revision %></td>
+        <td><%= list.created_at %></td>
 
-  </tr>
-  <%end%>
-</table>
+      </tr>
+      <%end%>
+    </table>
+  </div>
+</div>
+
+
