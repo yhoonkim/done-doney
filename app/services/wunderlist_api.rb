@@ -45,6 +45,7 @@ class WunderlistApi
       request['X-Client-ID'] = ENV['WUNDERLIST_CLIENT_ID']
 
       response = http.request(request)
+      JSON.parse(response.body, {symbolize_names: true})
     else
       raise "Please initialize the class"
     end
@@ -58,6 +59,7 @@ class WunderlistApi
     request = Net::HTTP::Post.new(uri.request_uri, {'Content-Type' =>'application/json'})
     request.body = sending_data.to_json
     response = http.request(request)
+    JSON.parse(response.body, {symbolize_names: true})
   end
 
 end

@@ -11,15 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150618033728) do
+ActiveRecord::Schema.define(version: 20150624083049) do
 
   create_table "authorizations", force: :cascade do |t|
     t.string   "provider"
     t.string   "uid"
     t.integer  "user_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
     t.string   "access_token"
+    t.integer  "root_revision", default: 0
   end
 
   create_table "lists", force: :cascade do |t|
@@ -33,17 +34,28 @@ ActiveRecord::Schema.define(version: 20150618033728) do
     t.datetime "updated_at",          null: false
   end
 
-  create_table "sub_tasks", force: :cascade do |t|
+  create_table "memberships", force: :cascade do |t|
+    t.integer  "list_id"
+    t.integer  "user_id"
+    t.integer  "revision"
+    t.string   "state"
+    t.boolean  "owner"
+    t.boolean  "muted"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "subtasks", force: :cascade do |t|
     t.datetime "original_created_at"
     t.integer  "created_by_id"
     t.integer  "task_id"
     t.integer  "revision"
+    t.integer  "point"
     t.string   "title"
     t.integer  "completed_by_id"
     t.datetime "completed_at"
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
-    t.integer  "point"
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -68,6 +80,7 @@ ActiveRecord::Schema.define(version: 20150618033728) do
     t.string   "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "uid"
   end
 
 end

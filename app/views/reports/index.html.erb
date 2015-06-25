@@ -5,11 +5,28 @@
     <th>Created at</th>
 
   </tr>
-  <% @lists.each do |list| %>
+  <% @raw_lists.each do |list| %>
   <tr>
     <td><%= list[:title] %></td>
     <td><%= list[:revision] %></td>
     <td><%= list[:created_at] %></td>
+
+  </tr>
+  <%end%>
+</table>
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Revision</th>
+    <th>Created at</th>
+
+  </tr>
+  <% @lists.each do |list| %>
+  <tr>
+    <td><%= list.title %></td>
+    <td><%= list.revision %></td>
+    <td><%= list.created_at %></td>
 
   </tr>
   <%end%>
