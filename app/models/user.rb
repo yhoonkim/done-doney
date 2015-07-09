@@ -4,6 +4,56 @@ class User < ActiveRecord::Base
   has_many :lists, through: :memberships
   validates :name, :email, :presence => true
 
+
+  def point_of_day(query_day)
+    today_point = 0
+    done_tasks_of_day(query_day).each do |task|
+      today_point += task.point if task.point
+    end
+
+    today_point
+  end
+
+  def average_point_of_day(query_day)
+
+    last_week = (query_day-7.day)
+    average_point = 0
+
+    done_tasks_of_week(last_week.cwyear, last_week.cweek).each do |task|
+      average_point += task.point if task.point
+    end
+    average_point = average_point / 7
+
+  end
+
+  def done_tasks_of_day(query_day)
+    tasks = []
+    arel_record = Task.arel_table
+    lists.each do |list|
+      tasks = tasks + list.tasks.where(arel_record[:completed_at].gteq(query_day.in_time_zone(time_zone).beginning_of_day))
+        .where(arel_record[:completed_at].lt(query_day.in_time_zone(time_zone).end_of_day))
+
+    end
+    tasks
+  end
+
+  def done_tasks_of_week(cwyear, cweek)
+    arel_record = Task.arel_table
+    s_day = Date.commercial(cwyear, cweek).beginning_of_week
+    e_day = Date.commercial(cwyear, cweek).end_of_week
+
+    tasks = []
+
+    lists.each do |list|
+
+      tasks = tasks + list.tasks
+          .where(arel_record[:completed_at].gteq(s_day.in_time_zone(time_zone).beginning_of_day))
+          .where(arel_record[:completed_at].lt(e_day.in_time_zone(time_zone).end_of_day))
+    end
+    tasks
+  end
+
+
   def add_provider(auth_hash)
     # Check if the provider already exists, so we don't add it twice
     unless authorizations.find_by_provider_and_uid(auth_hash["provider"], auth_hash["uid"])

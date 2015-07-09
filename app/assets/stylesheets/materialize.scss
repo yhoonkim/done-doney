@@ -36,3 +36,25 @@
 @import "components/date_picker/default.scss";
 @import "components/date_picker/default.date.scss";
 @import "components/date_picker/default.time.scss";
+
+
+
+.nowCircle {
+  fill: $primary-color;
+}
+
+.nowPointText {
+
+}
+
+
+.averageCircle {
+  fill: $primary-color;
+  stroke-width: 4;
+  stroke: $primary-color;
+  fill: none;
+}
+.averageCircle.invert {
+  stroke: white;
+}
+

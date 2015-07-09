@@ -2,6 +2,8 @@ class Task < ActiveRecord::Base
   belongs_to :list
   has_many :subtasks
 
+
+
   def self.create_by_wunderlist(raw_task)
     create(id: raw_task[:id],
           assignee_id: raw_task[:assignee_id],
