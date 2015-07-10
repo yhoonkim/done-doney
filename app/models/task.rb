@@ -3,6 +3,24 @@ class Task < ActiveRecord::Base
   has_many :subtasks
 
 
+  def done_subtasks_of_day(query_day, time_zone)
+
+    arel_record = Subtask.arel_table
+    subtasks.where(arel_record[:completed_at].gteq(query_day.in_time_zone(time_zone).beginning_of_day))
+            .where(arel_record[:completed_at].lt(query_day.in_time_zone(time_zone).end_of_day))
+
+  end
+
+  def done_subtasks_of_week(cwyear, cweek, time_zone)
+    arel_record = Subtask.arel_table
+    s_day = Date.commercial(cwyear, cweek).beginning_of_week
+    e_day = Date.commercial(cwyear, cweek).end_of_week
+
+    arel_record = Subtask.arel_table
+    subtasks.where(arel_record[:completed_at].gteq(s_day.in_time_zone(time_zone).beginning_of_day))
+            .where(arel_record[:completed_at].lt(e_day.in_time_zone(time_zone).end_of_day))
+  end
+
 
   def self.create_by_wunderlist(raw_task)
     create(id: raw_task[:id],

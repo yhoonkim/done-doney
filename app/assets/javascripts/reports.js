@@ -3,6 +3,9 @@
 // # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $(document).on('ready page:load', function () {
+
+
+
   var todoDone = $('#reportVis').data('todo-done');
   var width = $('#reportVis').width(),
       height = 400;

@@ -3,7 +3,7 @@ class ReportsController < ApplicationController
 
   def index
     @user = User.find(session[:user_id])
-    # @user.sync_wunderlist!
+    @user.sync_wunderlist!
     @tasks = @user.lists.first.tasks
     @tasks_todo = @tasks.where(:completed_at => nil).order(original_created_at: :desc)
     @tasks_done = @tasks.where.not(:completed_at => nil).order(completed_at: :desc)

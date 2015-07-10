@@ -8,7 +8,14 @@ class User < ActiveRecord::Base
   def point_of_day(query_day)
     today_point = 0
     done_tasks_of_day(query_day).each do |task|
-      today_point += task.point if task.point
+      if task.point > 0
+        today_point += task.point
+      elsif task.point == -1 #subtasks have points
+        task.done_subtasks_of_day(query_day, time_zone).each do |subtask|
+          today_point += subtask.point if subtask.point
+        end
+      end
+
     end
 
     today_point
@@ -20,7 +27,13 @@ class User < ActiveRecord::Base
     average_point = 0
 
     done_tasks_of_week(last_week.cwyear, last_week.cweek).each do |task|
-      average_point += task.point if task.point
+      if task.point > 0
+        average_point += task.point
+      elsif task.point == -1 #subtasks have points
+        task.done_subtasks_of_week(last_week.cwyear, last_week.cweek, time_zone).each do |subtask|
+          average_point += subtask.point if subtask.point
+        end
+      end
     end
     average_point = average_point / 7
 
@@ -33,6 +46,7 @@ class User < ActiveRecord::Base
       tasks = tasks + list.tasks.where(arel_record[:completed_at].gteq(query_day.in_time_zone(time_zone).beginning_of_day))
         .where(arel_record[:completed_at].lt(query_day.in_time_zone(time_zone).end_of_day))
 
+      tasks = tasks + list.tasks.where(:completed_at => nil).where(:point => -1)
     end
     tasks
   end
@@ -49,6 +63,9 @@ class User < ActiveRecord::Base
       tasks = tasks + list.tasks
           .where(arel_record[:completed_at].gteq(s_day.in_time_zone(time_zone).beginning_of_day))
           .where(arel_record[:completed_at].lt(e_day.in_time_zone(time_zone).end_of_day))
+
+      tasks = tasks + list.tasks.where(:completed_at => nil).where(:point => -1)
+
     end
     tasks
   end
