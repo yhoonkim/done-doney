@@ -4,35 +4,10 @@
 </div>
 <div class="row">
   <div class="col l6 m6 s12">
-    <ul class="collection with-header collapsible" data-collapsible="accordion">
-      <li class="collection-header">
-        <h4><i class="material-icons">list</i> Todo</h4>
-      </li>
-      <% @tasks_todo.each do |task| %>
-      <li >
-        <div class="collapsible-header"><%= task.title %>
-          <span class="badge"><%= task.point %></span>
-        </div>
-        <div class="collapsible-body">
-          <p>Lorem ipsum dolor sit amet.</p>
-        </div>
-      </li>
-      <% end %>
-    </ul>
+    <%= render "tasks", title: "Todo", type: "list", tasks: @tasks_todo %>
   </div>
-  <div class="col m6 s12">
-    <ul class="collection with-header">
-      <li class="collection-header">
-        <h4><i class="material-icons">done</i> Done</h4>
-      </li>
-      <% @tasks_done.each do |task| %>
-      <li class="collection-item">
-        <div><%= task.title %>
-          <span class="badge"><%= task.point %></span>
-        </div>
-      </li>
-      <% end %>
-    </ul>
+  <div class="col l6 m6 s12">
+    <%= render "tasks", title: "Done", type: "done", tasks: @tasks_done %>
   </div>
 </div>
 
@@ -40,10 +15,6 @@
   <%= link_to report_path, :method => :get, class: "btn-floating btn-large red" do %>
       <i class="large material-icons">loop</i>
   <% end %>
-
-
-
-
 </div>
 
 

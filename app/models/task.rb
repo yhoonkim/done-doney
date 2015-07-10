@@ -2,6 +2,27 @@ class Task < ActiveRecord::Base
   belongs_to :list
   has_many :subtasks
 
+  def has_subpoint?
+    point == -1
+  end
+
+  def total_subpoint
+    raise "It doesn't have subpoints" if !has_subpoint?
+    total = 0
+    subtasks.each do |subtask|
+      total += subtask.point if subtask.point
+    end
+    total
+  end
+
+  def total_completed_subpoint
+    raise "It doesn't have subpoints" if !has_subpoint?
+    total = 0
+    subtasks.each do |subtask|
+      total += subtask.point if subtask.point && subtask.completed_at
+    end
+    total
+  end
 
   def done_subtasks_of_day(query_day, time_zone)
 
