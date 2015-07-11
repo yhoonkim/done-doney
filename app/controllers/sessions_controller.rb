@@ -4,9 +4,8 @@ class SessionsController < ApplicationController
     # raise user_signed_in?.inspect
     if user_signed_in?
       redirect_to report_path
-    elsif !cookies.permanent[:access_token].blank?
-      auth = Authorization.find_by_access_token(cookies.permanent[:access_token])
-      session[:user_id] = auth.user.id
+    elsif !cookies.permanent.signed[:user_id].blank?
+      session[:user_id] = cookies.permanent.signed[:user_id]
       redirect_to report_path
     end
   end
@@ -27,7 +26,8 @@ class SessionsController < ApplicationController
       auth.update(access_token: access_token)
       auth.save
 
-      cookies.permanent[:access_token] = access_token
+      # remember him/her
+      cookies.permanent.signed[:user_id] = auth.user.id
 
 
       # Create the session
@@ -45,7 +45,7 @@ class SessionsController < ApplicationController
 
   def destroy
     session[:user_id] = nil
-    cookies.permanent[:access_token] = nil
+    cookies.permanent.signed[:user_id] = nil
     redirect_to root_path
   end
 
