@@ -58,3 +58,9 @@
   stroke: white;
 }
 
+.avgPointText {
+  fill: $primary-color;
+}
+.avgPointText.invert {
+  fill: white;
+}
