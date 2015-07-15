@@ -12,7 +12,8 @@ $(document).on('ready page:load', function () {
 
   var rScale = d3.scale.linear()
                        .domain([0, todoDone.average * 2])
-                       .range([10, height / 2 * 0.9]);
+                       .range([10, height / 2 * 0.9])
+                       .clamp(true);
 
   var fontScale = d3.scale.linear()
                        .domain([0, todoDone.average, todoDone.average * 2])
