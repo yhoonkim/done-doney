@@ -23,14 +23,14 @@ class User < ActiveRecord::Base
 
   def average_point_of_day(query_day)
 
-    last_week = (query_day-7.day)
+    last_week_day = (query_day-7.day)
     average_point = 0
 
-    done_tasks_of_week(last_week.cwyear, last_week.cweek).each do |task|
+    done_tasks_of_week(last_week_day ).each do |task|
       if task.point > 0
         average_point += task.point
       elsif task.point == -1 #subtasks have points
-        task.done_subtasks_of_week(last_week.cwyear, last_week.cweek, time_zone).each do |subtask|
+        task.done_subtasks_of_week(last_week_day, time_zone).each do |subtask|
           average_point += subtask.point if subtask.point
         end
       end
@@ -51,9 +51,18 @@ class User < ActiveRecord::Base
     tasks
   end
 
-  def done_tasks_of_week(cwyear, cweek)
+  def done_tasks_of_week(query_day, *option)
+    cwyear = query_day.cwyear
+    cweek = query_day.cweek
+
     arel_record = Task.arel_table
-    s_day = Date.commercial(cwyear, cweek).beginning_of_week
+
+    if !option[0].blank? && option[0][:last_two_weeks]
+      s_day = Date.commercial((query_day-7.day).cwyear, (query_day-7.day).cweek ).beginning_of_week
+    else
+      s_day = Date.commercial(cwyear, cweek).beginning_of_week
+    end
+
     e_day = Date.commercial(cwyear, cweek).end_of_week
 
     tasks = []
@@ -64,7 +73,45 @@ class User < ActiveRecord::Base
           .where(arel_record[:completed_at].gteq(s_day.in_time_zone(time_zone).beginning_of_day))
           .where(arel_record[:completed_at].lt(e_day.in_time_zone(time_zone).end_of_day))
 
-      tasks = tasks + list.tasks.where(:completed_at => nil).where(:point => -1)
+      if option[0].blank? || !option[0][:without_subtasks]
+        tasks = tasks + list.tasks.where(:completed_at => nil).where(:point => -1).select do |e|
+          !e.done_subtasks_of_week(query_day, time_zone).empty?
+        end
+      end
+
+    end
+    tasks
+  end
+
+  def todo_tasks(*option)
+    arel_record = Task.arel_table
+
+    tasks = []
+
+    lists.each do |list|
+
+      if !option[0].blank? && option[0][:without_due_tasks]
+        tasks = tasks + list.tasks.where(:completed_at => nil).where(due_date: nil)
+      else
+        tasks = tasks + list.tasks.where(:completed_at => nil)
+      end
+
+    end
+    tasks
+  end
+
+  def due_tasks_of_week(query_day)
+    arel_record = Task.arel_table
+    s_day = Date.commercial(query_day.cwyear, query_day.cweek).beginning_of_week
+    e_day = Date.commercial(query_day.cwyear, query_day.cweek).end_of_week
+
+    tasks = []
+
+    lists.each do |list|
+
+      tasks = tasks + list.tasks
+          .where(arel_record[:due_date].lt(e_day.in_time_zone(time_zone).end_of_day))
+          .where(:completed_at => nil)
 
     end
     tasks

@@ -3,7 +3,7 @@ class Subtask < ActiveRecord::Base
 
   def self.create_by_wunderlist(raw_subtask)
     create(id: raw_subtask[:id],
-          original_created_at: raw_subtask[:original_created_at],
+          original_created_at: raw_subtask[:created_at],
           created_by_id: raw_subtask[:created_by_id],
           task_id: raw_subtask[:task_id],
           title: raw_subtask[:title],
@@ -14,7 +14,7 @@ class Subtask < ActiveRecord::Base
            )
   end
   def update_by_wunderlist(raw_subtask)
-    update(original_created_at: raw_subtask[:original_created_at],
+    update(original_created_at: raw_subtask[:created_at],
           created_by_id: raw_subtask[:created_by_id],
           task_id: raw_subtask[:task_id],
           title: raw_subtask[:title],

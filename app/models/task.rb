@@ -2,6 +2,11 @@ class Task < ActiveRecord::Base
   belongs_to :list
   has_many :subtasks
 
+
+  def partly_completed_at
+    completed_at || subtasks.maximum(:completed_at)
+  end
+
   def has_subpoint?
     point == -1
   end
@@ -32,10 +37,10 @@ class Task < ActiveRecord::Base
 
   end
 
-  def done_subtasks_of_week(cwyear, cweek, time_zone)
+  def done_subtasks_of_week(query_day, time_zone)
     arel_record = Subtask.arel_table
-    s_day = Date.commercial(cwyear, cweek).beginning_of_week
-    e_day = Date.commercial(cwyear, cweek).end_of_week
+    s_day = Date.commercial(query_day.cwyear, query_day.cweek).beginning_of_week
+    e_day = Date.commercial(query_day.cwyear, query_day.cweek).end_of_week
 
     arel_record = Subtask.arel_table
     subtasks.where(arel_record[:completed_at].gteq(s_day.in_time_zone(time_zone).beginning_of_day))
@@ -47,7 +52,7 @@ class Task < ActiveRecord::Base
     create(id: raw_task[:id],
           assignee_id: raw_task[:assignee_id],
           assigner_id: raw_task[:assigner_id],
-          original_created_at: raw_task[:original_created_at],
+          original_created_at: raw_task[:created_at],
           created_by_id: raw_task[:created_by_id],
           due_date: raw_task[:due_date],
           list_id: raw_task[:list_id],
@@ -62,7 +67,7 @@ class Task < ActiveRecord::Base
   def update_by_wunderlist(raw_task)
     update(assignee_id: raw_task[:assignee_id],
           assigner_id: raw_task[:assigner_id],
-          original_created_at: raw_task[:original_created_at],
+          original_created_at: raw_task[:created_at],
           created_by_id: raw_task[:created_by_id],
           due_date: raw_task[:due_date],
           list_id: raw_task[:list_id],
