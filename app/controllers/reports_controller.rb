@@ -14,7 +14,7 @@ class ReportsController < ApplicationController
     @tasks_done = @user.done_tasks_of_week(today, {last_two_weeks: true})
     @tasks_done = @tasks_done.sort { |a, b| b.partly_completed_at <=> a.partly_completed_at }
 
-    @tasks_due = @user.due_tasks_of_week(today)
+    @tasks_due = @user.due_tasks_of_week.sort { |a, b| a.due_date <=> b.due_date }
 
     today_point = @user.point_of_day(today)
     average_point = @user.average_point_of_day(today)

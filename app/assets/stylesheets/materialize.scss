@@ -64,3 +64,20 @@
 .avgPointText.invert {
   fill: white;
 }
+
+.collapsible-header.dday {
+  height: 1.5rem;
+  line-height: 1.5rem;
+  color: white;
+  padding: 0;
+}
+
+.dday-header {
+  border-right: 1px solid white;
+  background-color: $secondary-color;
+}
+
+.gauge {
+  padding: 0 !important;
+  background-color: $secondary-color;
+}

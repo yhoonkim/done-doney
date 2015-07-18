@@ -51,13 +51,13 @@ class User < ActiveRecord::Base
     tasks
   end
 
-  def done_tasks_of_week(query_day, *option)
+  def done_tasks_of_week(query_day, *options)
     cwyear = query_day.cwyear
     cweek = query_day.cweek
 
     arel_record = Task.arel_table
 
-    if !option[0].blank? && option[0][:last_two_weeks]
+    if !options[0].blank? && options[0][:last_two_weeks]
       s_day = Date.commercial((query_day-7.day).cwyear, (query_day-7.day).cweek ).beginning_of_week
     else
       s_day = Date.commercial(cwyear, cweek).beginning_of_week
@@ -73,7 +73,7 @@ class User < ActiveRecord::Base
           .where(arel_record[:completed_at].gteq(s_day.in_time_zone(time_zone).beginning_of_day))
           .where(arel_record[:completed_at].lt(e_day.in_time_zone(time_zone).end_of_day))
 
-      if option[0].blank? || !option[0][:without_subtasks]
+      if options[0].blank? || !options[0][:without_subtasks]
         tasks = tasks + list.tasks.where(:completed_at => nil).where(:point => -1).select do |e|
           !e.done_subtasks_of_week(query_day, time_zone).empty?
         end
@@ -83,14 +83,14 @@ class User < ActiveRecord::Base
     tasks
   end
 
-  def todo_tasks(*option)
+  def todo_tasks(*options)
     arel_record = Task.arel_table
 
     tasks = []
 
     lists.each do |list|
 
-      if !option[0].blank? && option[0][:without_due_tasks]
+      if !options[0].blank? && options[0][:without_due_tasks]
         tasks = tasks + list.tasks.where(:completed_at => nil).where(due_date: nil)
       else
         tasks = tasks + list.tasks.where(:completed_at => nil)
@@ -100,19 +100,15 @@ class User < ActiveRecord::Base
     tasks
   end
 
-  def due_tasks_of_week(query_day)
-    arel_record = Task.arel_table
-    s_day = Date.commercial(query_day.cwyear, query_day.cweek).beginning_of_week
-    e_day = Date.commercial(query_day.cwyear, query_day.cweek).end_of_week
+  def due_tasks_of_week
 
     tasks = []
 
     lists.each do |list|
 
       tasks = tasks + list.tasks
-          .where(arel_record[:due_date].lt(e_day.in_time_zone(time_zone).end_of_day))
+          .where.not(due_date: nil)
           .where(:completed_at => nil)
-
     end
     tasks
   end

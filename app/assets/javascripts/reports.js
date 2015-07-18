@@ -78,5 +78,21 @@ $(document).on('ready page:load', function () {
 
 
 
+  $(".gauge").css("width", function(){
+    var remainedDay = $(this).data("dday");
+    var curr_width = 83.33;
+    console.log(curr_width);
+
+    if(remainedDay>=14)
+      return curr_width + "%"
+    else if (remainedDay >0)
+      return Math.round(curr_width * remainedDay / 14 * 100 )/100 + "%";
+    else
+      return "0%"
+
+  });
+
+
+
 
 });

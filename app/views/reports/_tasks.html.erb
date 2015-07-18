@@ -2,8 +2,33 @@
   <li class="collection-header">
     <h4><i class="material-icons"><%=type%></i> <%=title%></h4>
   </li>
+  <% curr_date = 0 %>
   <% tasks.each do |task| %>
+
+  <% if( title=="Due" && curr_date != task.due_date )  %>
+  <% (dday = (Date.today - task.due_date).to_i) %>
+
   <li >
+    <div class="collapsible-header dday" >
+      <div class="col m2 dday-header center-align" >
+        <% if( dday > 0 ) %>
+          <%= "D+#{(Date.today - task.due_date).to_i}" %>
+        <% elsif( dday ==0 ) %>
+          <%= "D-day" %>
+        <% else %>
+          <%= "D#{(Date.today - task.due_date).to_i}" %>
+        <% end %>
+      </div>
+      <div class="col m10 gauge" data-dday="<%= (task.due_date-Date.today).to_i %>" >&nbsp;</div>
+
+    </div>
+
+  </li>
+    <% curr_date  = task.due_date %>
+  <% end %>
+
+  <li >
+
     <div class="collapsible-header">
       <%= task.title %>
       <span class="badge">
@@ -14,6 +39,7 @@
       <% end%>
       </span>
     </div>
+
     <% if( task.has_subpoint? ) %>
     <div class="collapsible-body">
       <ul class="collection sub-collection">
