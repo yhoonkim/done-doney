@@ -73,6 +73,7 @@
 }
 
 .dday-header {
+  padding : 0 0.25rem !important;
   border-right: 1px solid white;
   background-color: $secondary-color;
 }
@@ -80,4 +81,8 @@
 .gauge {
   padding: 0 !important;
   background-color: $secondary-color;
+}
+
+.overflow-visible {
+  overflow: visible;
 }

@@ -1,4 +1,4 @@
-<ul class="collection with-header collapsible" data-collapsible="accordion">
+<ul class="collection with-header collapsible overflow-visible" data-collapsible="accordion">
   <li class="collection-header">
     <h4><i class="material-icons"><%=type%></i> <%=title%></h4>
   </li>
@@ -10,7 +10,7 @@
 
   <li >
     <div class="collapsible-header dday" >
-      <div class="col m2 dday-header center-align" >
+      <div class="col s2 m2 dday-header center-align" >
         <% if( dday > 0 ) %>
           <%= "D+#{(Date.today - task.due_date).to_i}" %>
         <% elsif( dday ==0 ) %>
@@ -19,7 +19,7 @@
           <%= "D#{(Date.today - task.due_date).to_i}" %>
         <% end %>
       </div>
-      <div class="col m10 gauge" data-dday="<%= (task.due_date-Date.today).to_i %>" >&nbsp;</div>
+      <div class="col s10 m10 gauge" data-dday="<%= (task.due_date-Date.today).to_i %>" >&nbsp;</div>
 
     </div>
 
@@ -28,15 +28,25 @@
   <% end %>
 
   <li >
-
     <div class="collapsible-header">
       <%= task.title %>
       <span class="badge">
       <% if( task.has_subpoint? )%>
         <%= task.total_completed_subpoint %> / <%= task.total_subpoint %>
-      <% else %>
-        <%= task.point %>
-      <% end%>
+      <% elsif task.point %>
+        <a class='dropdown-button btn-floating' href='#' data-activates='dropdown<%= task.id %>'>
+          <%= task.point %>
+        </a>
+
+        <!-- Dropdown Structure -->
+        <ul id='dropdown<%= task.id %>' class='dropdown-content' style="z-index: 100;">
+          <li><a href="#!">1</a></li>
+          <li><a href="#!">2</a></li>
+          <li><a href="#!">3</a></li>
+          <li><a href="#!">5</a></li>
+          <li><a href="#!">8</a></li>
+        </ul>
+      <% end %>
       </span>
     </div>
 
@@ -63,3 +73,4 @@
   </li>
   <% end %>
 </ul>
+
