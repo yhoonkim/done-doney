@@ -93,8 +93,92 @@ $(document).on('ready page:load', function () {
   });
 
 
+  $(".btn-small").addClass(function(){
+    var point = $(this).html().trim();
+    return point_to_colorClass(point);
+
+  });
+
+  $(".jq-change-point").on('click',function(){
+    var JQthis = $(this);
+    var sendingData = { which: JQthis.data('which'), id: Number(JQthis.data('which-id')), point: Number(JQthis.data('point'))  }
+
+    if (JQthis.data('clickable')) {
+
+      $.ajax({
+        method: "GET",
+        url: "/change_point",
+        data: sendingData,
+      }).done(function() {
+        var targetID = JQthis.data('dropdown-id');
+        var JQdropdownButton = $('#dropdown-button'+targetID);
+        var newClass = 'dropdown-button btn-floating btn-small ' + point_to_colorClass(sendingData.point)
+
+        var JQdropdownList = $('#dropdown'+targetID).children('li');
+        var Listitem;
+        var JQlistitemLink;
+        var itemPoint;
+
+        JQdropdownButton.html(sendingData.point);
+        JQdropdownButton.attr('class' , newClass);
 
 
+        for (var i = 0; i < JQdropdownList.length; i++) {
+          Listitem = JQdropdownList[i];
+          JQlistitemLink = $(Listitem.children[0]);
+          itemPoint = Number(JQlistitemLink.data('point'));
 
+          if( itemPoint === sendingData.point){
+            $(Listitem).attr('class', point_to_colorClass(sendingData.point));
+            JQlistitemLink.attr('class', 'black-text jq-change-point' );
+            JQlistitemLink.data('clickable', false);
+          }
+          else if ( itemPoint !== sendingData.point){
+            $(Listitem).attr('class', 'grey darken-1');
+            JQlistitemLink.attr('class', point_to_colorClass(itemPoint, true) + ' jq-change-point');
+            JQlistitemLink.data('clickable', true);
+          }
+
+
+        };
+
+
+        Materialize.toast("<span class='blue-text text-lighten-2'>It's done!</span>", 4000)
+      })
+      .fail(function(data) {
+        alert( "error : " + data.error  );
+      })
+
+      Materialize.toast("Ok,,, updating the point", 4000)
+
+    }
+
+  })
+
+
+  function point_to_colorClass (point, isText ) {
+    var colorCode = ["green lighten-2", "lime", "yellow", "orange", "red lighten-2" ]
+    if( isText )
+      colorCode = ["green-text text-lighten-2", "lime-text", "yellow-text", "orange-text", "red-text text-lighten-2" ]
+
+    var color = "grey"
+    point = Number(point);
+    if( point === 1 ){
+      color = colorCode[0];
+    }
+    else if (point === 2) {
+      color = colorCode[1];
+    }
+    else if (point === 3) {
+      color = colorCode[2];
+    }
+    else if (point === 5) {
+      color = colorCode[3];
+    }
+    else if (point === 8) {
+      color = colorCode[4];
+    }
+    return color;
+  }
 
 });

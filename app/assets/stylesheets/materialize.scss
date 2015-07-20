@@ -65,11 +65,15 @@
   fill: white;
 }
 
-.collapsible-header.dday {
-  height: 1.5rem;
-  line-height: 1.5rem;
-  color: white;
-  padding: 0;
+.collapsible-header {
+  padding: 0 0 0 4.5rem;
+
+  &.dday {
+    height: 1.5rem;
+    line-height: 1.5rem;
+    color: white;
+    padding: 0;
+  }
 }
 
 .dday-header {
@@ -85,4 +89,48 @@
 
 .overflow-visible {
   overflow: visible;
+}
+
+.btn-floating.btn-small {
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  padding: 0;
+  color: black;
+}
+
+.dropdown-content-small {
+  min-width: 0;
+  li {
+    a {
+      padding: 1rem 0rem;
+      text-align:  center;
+      font-size: 1.0rem;
+      &:hover {
+        background-color: color("grey", "darken-3");
+      }
+    }
+    line-height: 0rem;
+  }
+}
+
+
+ul.sub-collection{
+  margin: 0;
+  border: none;
+
+  li.collection-item {
+    background-color: rgba(255,255,255,0.7); /*lightgray*/
+    line-height: 3rem;
+    padding: 0;
+  }
+}
+
+span.badge.left{
+  right: inherit;
+  left: 0.25rem;
+}
+.collapsible-body.sub-collection-container {
+  padding: 0 0 0 2rem;
+  background-color: rgb(211,211,211); /*lightgray*/
 }

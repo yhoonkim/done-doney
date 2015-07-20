@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get '/logout', :to => 'sessions#destroy'
 
   get '/report', :to => 'reports#index', :as => :report
+  get '/change_point', :to => 'reports#change_point', :as => :change_point, defaults: { format: 'json' }
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -104,6 +104,15 @@ class Task < ActiveRecord::Base
 
   end
 
+  def title_with_new_point(new_point)
+    regex = /^\[([0-9*]+)\](.*)$/
+    if matching = regex.match(title)
+      "[#{new_point}]" + matching[2]
+    else
+      title
+    end
+  end
+
   def sync_wunderlist_subtasks(raw_subtasks)
     subtasks.each do |st|
       if ( raw_subtasks.select{ |item| item[:id] == st.id }.empty?)

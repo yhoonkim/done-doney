@@ -29,42 +29,35 @@
 
   <li >
     <div class="collapsible-header">
-      <%= task.title %>
-      <span class="badge">
+      <%= pretty_title(task.title) %>
+      <span class="badge left">
       <% if( task.has_subpoint? )%>
         <%= task.total_completed_subpoint %> / <%= task.total_subpoint %>
       <% elsif task.point %>
-        <a class='dropdown-button btn-floating' href='#' data-activates='dropdown<%= task.id %>'>
-          <%= task.point %>
-        </a>
-
-        <!-- Dropdown Structure -->
-        <ul id='dropdown<%= task.id %>' class='dropdown-content' style="z-index: 100;">
-          <li><a href="#!">1</a></li>
-          <li><a href="#!">2</a></li>
-          <li><a href="#!">3</a></li>
-          <li><a href="#!">5</a></li>
-          <li><a href="#!">8</a></li>
-        </ul>
+        <%= render 'dropdown', deco_task: task, parent_task: nil, which: "task" %>
       <% end %>
       </span>
     </div>
 
     <% if( task.has_subpoint? ) %>
-    <div class="collapsible-body">
-      <ul class="collection sub-collection">
+    <div class="collapsible-body sub-collection-container">
+      <ul class="collection sub-collection overflow-visible">
         <% task.subtasks.each do |subtask| %>
-          <li class="collection-item">
+          <li class="collapsible-header " >
             <% if(subtask.completed_at) %>
             <span class="grey-text">
               <strike >
-                <%= subtask.title %>
+                <%= pretty_title(subtask.title) %>
               </strike>
             </span>
             <% else %>
-              <%= subtask.title %>
+              <%= pretty_title(subtask.title) %>
             <% end %>
-            <span class="badge"><%= subtask.point %></span>
+            <span class="badge left">
+              <% if subtask.point %>
+                <%= render 'dropdown', deco_task: subtask, parent_task: task, which: "subtask" %>
+              <% end %>
+            </span>
           </li>
         <% end %>
       </ul>
