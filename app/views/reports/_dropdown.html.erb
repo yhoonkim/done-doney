@@ -1,16 +1,16 @@
-<a class='dropdown-button btn-floating btn-small' href='#' data-activates='dropdown<%= deco_task.id %><%= parent_task.id if parent_task %>' id='dropdown-button<%= deco_task.id %><%= parent_task.id if parent_task %>'>
+<a class='dropdown-button btn-floating btn-small <%= dropdown_hash(deco_task, parent_task, nil) %>' href='#' data-activates='dropdown<%= dropdown_hash(deco_task, parent_task, title) %>' id='dropdown-button<%= dropdown_hash(deco_task, parent_task, title) %>'>
   <%= deco_task.point %>
 </a>
 
 <!-- Dropdown Structure -->
-<ul id='dropdown<%= deco_task.id %><%= parent_task.id if parent_task %>' class='dropdown-content dropdown-content-small' >
+<ul id='dropdown<%= dropdown_hash(deco_task, parent_task, title) %>' class='dropdown-content dropdown-content-small <%= dropdown_hash(deco_task, parent_task, nil) %>' >
   <% [1, 2, 3, 5, 8].each do |point| %>
     <% if( point == deco_task.point ) %>
     <li class="<%= point_to_bgcolor(deco_task.point) %> ">
-      <a href="#!" class="black-text jq-change-point" data-clickable = "false" data-point="<%= point %>" data-which="<%= which %>" data-which-id="<%= deco_task.id%>" data-dropdown-id ="<%= deco_task.id %><%= parent_task.id if parent_task %>" ><%= point %></a>
+      <a href="#!" class="black-text jq-change-point" data-clickable = "false" data-point="<%= point %>" data-which="<%= which %>" data-which-id="<%= deco_task.id%>" data-dropdown-id ="<%= dropdown_hash(deco_task, parent_task, nil) %>" ><%= point %></a>
     <% else %>
     <li class="grey darken-1">
-      <a href="#!" class="<%= point_to_textcolor(point) %> jq-change-point" data-clickable = "true" data-point="<%= point %>" data-which="<%= which %>" data-which-id="<%= deco_task.id%>" data-dropdown-id ="<%= deco_task.id %><%= parent_task.id if parent_task %>" ><%= point %></a>
+      <a href="#!" class="<%= point_to_textcolor(point) %> jq-change-point" data-clickable = "true" data-point="<%= point %>" data-which="<%= which %>" data-which-id="<%= deco_task.id%>" data-dropdown-id ="<%= dropdown_hash(deco_task, parent_task, nil) %>" ><%= point %></a>
     <% end %>
 
   </li>

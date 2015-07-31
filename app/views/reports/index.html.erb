@@ -6,13 +6,13 @@
 </div>
 <div class="row">
   <div class="col l6 m6 s12">
-    <%= render "tasks", title: "Todo", type: "list", tasks: @tasks_todo %>
+    <%= render "tasks", title: "Todo", icon_type: "list", tasks: @tasks_todo %>
   </div>
   <div class="col l6 m6 s12">
-    <%= render "tasks", title: "Due", type: "alarm_on", tasks: @tasks_due %>
+    <%= render "tasks", title: "Due", icon_type: "alarm_on", tasks: @tasks_due %>
   </div>
   <div class="col l12 m12 s12">
-    <%= render "tasks", title: "Done", type: "done_all", tasks: @tasks_done %>
+    <%= render "tasks", title: "Done", icon_type: "done_all", tasks: @tasks_done %>
   </div>
 </div>
 

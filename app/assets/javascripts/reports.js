@@ -111,16 +111,16 @@ $(document).on('ready page:load', function () {
         data: sendingData,
       }).done(function() {
         var targetID = JQthis.data('dropdown-id');
-        var JQdropdownButton = $('#dropdown-button'+targetID);
-        var newClass = 'dropdown-button btn-floating btn-small ' + point_to_colorClass(sendingData.point)
+        var JQdropdownButtons = $('a.' + targetID);
+        var newClass = 'dropdown-button btn-floating btn-small ' + point_to_colorClass(sendingData.point) + ' ' + targetID
 
-        var JQdropdownList = $('#dropdown'+targetID).children('li');
+        var JQdropdownList = $('ul.'+targetID).children('li');
         var Listitem;
         var JQlistitemLink;
         var itemPoint;
 
-        JQdropdownButton.html(sendingData.point);
-        JQdropdownButton.attr('class' , newClass);
+        JQdropdownButtons.html(sendingData.point);
+        JQdropdownButtons.attr('class' , newClass);
 
 
         for (var i = 0; i < JQdropdownList.length; i++) {
@@ -143,7 +143,7 @@ $(document).on('ready page:load', function () {
         };
 
 
-        Materialize.toast("<span class='blue-text text-lighten-2'>It's done!</span>", 4000)
+        Materialize.toast("<span class='blue-text text-lighten-2'>It's done! :)</span>", 4000)
       })
       .fail(function(data) {
         alert( "error : " + data.error  );
