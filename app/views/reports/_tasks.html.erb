@@ -42,7 +42,7 @@
     <% if( task.has_subpoint? ) %>
     <div class="collapsible-body sub-collection-container">
       <ul class="collection sub-collection overflow-visible">
-        <% task.subtasks.each do |subtask| %>
+        <% task.subtasks.all.order_by_title_without_point.each do |subtask| %>
           <li class="collapsible-header " >
             <% if(subtask.completed_at) %>
             <span class="grey-text">
