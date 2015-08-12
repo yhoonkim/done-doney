@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
 
   def point_of_day(query_day)
     today_point = 0
-    done_tasks_of_day(query_day).each do |task|
+    done_tasks_of_day(query_day).select{|e| e.point != nil }.each do |task|
       if task.point > 0
         today_point += task.point
       elsif task.point == -1 #subtasks have points
@@ -24,9 +24,9 @@ class User < ActiveRecord::Base
   def average_point_of_day(query_day)
 
     last_week_day = (query_day-7.day)
-    average_point = 0
+    average_point = 0.0
 
-    done_tasks_of_week(last_week_day ).each do |task|
+    done_tasks_of_week(last_week_day ).select{|e| e.point != nil }.each do |task|
       if task.point > 0
         average_point += task.point
       elsif task.point == -1 #subtasks have points
@@ -35,7 +35,8 @@ class User < ActiveRecord::Base
         end
       end
     end
-    average_point = average_point / 7
+
+    average_point = average_point.to_f / 7.to_f
 
   end
 

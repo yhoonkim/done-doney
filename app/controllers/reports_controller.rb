@@ -21,6 +21,7 @@ class ReportsController < ApplicationController
     average_point = @user.average_point_of_day(today)
 
     @tasks_done_summary_json = {today: today_point, average: average_point}.to_json
+
   end
 
   def change_point
