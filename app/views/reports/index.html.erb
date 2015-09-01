@@ -23,11 +23,50 @@
   <ul>
     <li>
       <%= link_to logout_path, :method => :get, class: "btn-floating red" do %>
-      <i class="material-icons">power_settings_new</i></i>
+      <i class="material-icons">power_settings_new</i>
       <% end %>
     </li>
+    <li>
+      <a class="modal-trigger btn-floating blue"  href="#modal1">
+        <i class="material-icons">playlist_add</i>
+      </a>
+    </li>
+
   </ul>
 </div>
 
+<!-- Modal Structure -->
+<div id="modal1" class="modal bottom-sheet overflow-visible">
+  <%= form_for @task do |f| %>
+  <div class="modal-content">
+    <h4>Add new Task</h4>
+
+      <div class="row">
+        <div class="input-field col s2 m1">
+          <div class="center-align valign-wrapper input-point">
+            Point :
+            <%= render 'dropdown', deco_task: @task, parent_task: nil, which: "new-task", title: "new-task" %>
+            <%= f.hidden_field :point %>
+          </div>
+        </div>
+        <div class="input-field col s10 m4">
+
+          <%= f.date_field :due_date, autofocus: false, class: "datepicker" %>
+          <%= f.label :due_date %>
+        </div>
+        <div class="input-field col s12 m7">
+          <%= f.text_field :title, autofocus: true %>
+          <%= f.label :title %>
+        </div>
 
 
+      </div>
+
+  </div>
+  <% end %>
+  <div class="modal-footer">
+    <button id="jq-add-task" class=" modal-action modal-close waves-effect waves-blue btn-flat" name="action">Add2</button>
+
+  </div>
+
+</div>

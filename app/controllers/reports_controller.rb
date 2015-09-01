@@ -22,6 +22,7 @@ class ReportsController < ApplicationController
 
     @tasks_done_summary_json = {today: today_point, average: average_point}.to_json
 
+    @task = Task.new(point: 1)
   end
 
   def change_point

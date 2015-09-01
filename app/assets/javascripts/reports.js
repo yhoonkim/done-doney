@@ -4,11 +4,23 @@
 
 $(document).on('ready page:load', function () {
 
+  var flash = $('#flash').data('flash');
+  if( flash.errors) {
+    for (var i = 0; i < flash.errors.length; i++) {
+      Materialize.toast("<span class='red-text text-lighten-2'>"+flash.errors[i]+"</span>", 4000);
+    };
+  }
+  else if (flash.successes) {
+    for (var i = 0; i < flash.successes.length; i++) {
+      Materialize.toast("<span class='blue-text text-lighten-2'>"+flash.successes[i]+"</span>", 4000);
+    };
+  };
 
 
   var todoDone = $('#reportVis').data('todo-done');
   var width = $('#reportVis').width(),
       height = 400;
+  todoDone.average = Math.round(todoDone.average*100) / 100;
 
   var rScale = d3.scale.linear()
                        .domain([0, todoDone.average * 2])
@@ -76,6 +88,14 @@ $(document).on('ready page:load', function () {
                               .attr("text-anchor", "middle")
                               .text("avg : " + todoDone.average)
 
+  $('.modal-trigger').leanModal();
+  $('.datepicker').pickadate({
+    selectMonths: true, // Creates a dropdown to control month
+    selectYears: 15 // Creates a dropdown of 15 years to control year
+  });
+  $('select').material_select();
+
+
 
 
   $(".gauge").css("width", function(){
@@ -103,58 +123,94 @@ $(document).on('ready page:load', function () {
     var JQthis = $(this);
     var sendingData = { which: JQthis.data('which'), id: Number(JQthis.data('which-id')), point: Number(JQthis.data('point'))  }
 
-    if (JQthis.data('clickable')) {
+    if (JQthis.data('clickable') ) {
+      if (sendingData.which === "new-task") {
+        change_color(JQthis, sendingData);
+        $('#task_point').val(sendingData.point);
+      }
+      else{
+        $.ajax({
+          method: "GET",
+          url: "/change_point",
+          data: sendingData,
+        }).done(function() {
+          change_color(JQthis, sendingData);
+          Materialize.toast("<span class='blue-text text-lighten-2'>It's done! :)</span>", 4000)
+        })
+        .fail(function(data) {
+          alert( "error : " + data.error  );
+        })
 
-      $.ajax({
-        method: "GET",
-        url: "/change_point",
-        data: sendingData,
-      }).done(function() {
-        var targetID = JQthis.data('dropdown-id');
-        var JQdropdownButtons = $('a.' + targetID);
-        var newClass = 'dropdown-button btn-floating btn-small ' + point_to_colorClass(sendingData.point) + ' ' + targetID
-
-        var JQdropdownList = $('ul.'+targetID).children('li');
-        var Listitem;
-        var JQlistitemLink;
-        var itemPoint;
-
-        JQdropdownButtons.html(sendingData.point);
-        JQdropdownButtons.attr('class' , newClass);
-
-
-        for (var i = 0; i < JQdropdownList.length; i++) {
-          Listitem = JQdropdownList[i];
-          JQlistitemLink = $(Listitem.children[0]);
-          itemPoint = Number(JQlistitemLink.data('point'));
-
-          if( itemPoint === sendingData.point){
-            $(Listitem).attr('class', point_to_colorClass(sendingData.point));
-            JQlistitemLink.attr('class', 'black-text jq-change-point' );
-            JQlistitemLink.data('clickable', false);
-          }
-          else if ( itemPoint !== sendingData.point){
-            $(Listitem).attr('class', 'grey darken-1');
-            JQlistitemLink.attr('class', point_to_colorClass(itemPoint, true) + ' jq-change-point');
-            JQlistitemLink.data('clickable', true);
-          }
-
-
-        };
-
-
-        Materialize.toast("<span class='blue-text text-lighten-2'>It's done! :)</span>", 4000)
-      })
-      .fail(function(data) {
-        alert( "error : " + data.error  );
-      })
-
-      Materialize.toast("Ok,,, updating the point", 4000)
-
+        Materialize.toast("Ok,,, updating the point", 4000);
+      }
     }
 
   })
 
+  $("#jq-add-task").on('click',function(){
+    var JQthis = $(this);
+    var sendingDataTemp = {};
+    var sendingData = {};
+
+    $("#new_task").serializeArray().map(function(x){
+      if(x.name.match(/task\[(.*)\]$/g)) {
+        sendingData[x.name.replace(/task\[(.*)\]$/g,"$1")] = x.value;
+      }
+    });
+
+
+    $.ajax({
+          method: "POST",
+          url: "/tasks",
+          data: {"task":sendingData},
+          dataType: 'json'
+        }).done(function( data, textStatus, jqXHR )  {
+          console.log(data);
+          Materialize.toast("<span class='blue-text text-lighten-2'>"+data.responseText+"</span>", 4000);
+        })
+        .fail(function(data) {
+          console.log(data);
+          Materialize.toast("<span class='red-text '>"+data.responseText+"</span>", 4000);
+        });
+
+    Materialize.toast("Ok,,, adding new task...", 4000);
+
+
+  })
+
+  function change_color(JQthat, sendingData) {
+    var targetID = JQthat.data('dropdown-id');
+    var JQdropdownButtons = $('a.' + targetID);
+    var newClass = 'dropdown-button btn-floating btn-small ' + point_to_colorClass(sendingData.point) + ' ' + targetID
+
+    var JQdropdownList = $('ul.'+targetID).children('li');
+    var Listitem;
+    var JQlistitemLink;
+    var itemPoint;
+
+    JQdropdownButtons.html(sendingData.point);
+    JQdropdownButtons.attr('class' , newClass);
+
+
+    for (var i = 0; i < JQdropdownList.length; i++) {
+      Listitem = JQdropdownList[i];
+      JQlistitemLink = $(Listitem.children[0]);
+      itemPoint = Number(JQlistitemLink.data('point'));
+
+      if( itemPoint === sendingData.point){
+        $(Listitem).attr('class', point_to_colorClass(sendingData.point));
+        JQlistitemLink.attr('class', 'black-text jq-change-point' );
+        JQlistitemLink.data('clickable', false);
+      }
+      else if ( itemPoint !== sendingData.point){
+        $(Listitem).attr('class', 'grey darken-1');
+        JQlistitemLink.attr('class', point_to_colorClass(itemPoint, true) + ' jq-change-point');
+        JQlistitemLink.data('clickable', true);
+      }
+
+
+    };
+  }
 
   function point_to_colorClass (point, isText ) {
     var colorCode = ["green lighten-2", "lime", "yellow", "orange", "red lighten-2" ]

@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   get '/report', :to => 'reports#index', :as => :report
   get '/change_point', :to => 'reports#change_point', :as => :change_point, defaults: { format: 'json' }
 
+  resources :tasks
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

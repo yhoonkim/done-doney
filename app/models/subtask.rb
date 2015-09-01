@@ -57,9 +57,10 @@ def self.get_point(title)
     if matching = regex.match(title)
       "[#{new_point}]" + matching[2]
     else
-      title
+      "[#{new_point}]" + title
     end
   end
+
 
   def title_without_point
     regex = /^\[([0-9*]+)\](.*)$/

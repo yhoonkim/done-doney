@@ -41,10 +41,15 @@ module ReportsHelper
     end
   end
 
-  def dropdown_hash(deco_task, parent_task, title)
-    hash = deco_task.id.to_s
+  def dropdown_hash(deco_task, parent_task)
+
+    if deco_task.id && deco_task
+      hash = deco_task.id.to_s
+    else
+      hash = "new-task"
+    end
+
     hash += parent_task.id.to_s if parent_task
-    hash += title if title
     hash
   end
 end

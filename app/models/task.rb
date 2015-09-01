@@ -2,6 +2,7 @@ class Task < ActiveRecord::Base
   belongs_to :list
   has_many :subtasks
 
+  validates :title, presence: true
 
   def partly_completed_at
     completed_at || subtasks.maximum(:completed_at)
@@ -109,7 +110,7 @@ class Task < ActiveRecord::Base
     if matching = regex.match(title)
       "[#{new_point}]" + matching[2]
     else
-      title
+      "[#{new_point}]" + title
     end
   end
 
